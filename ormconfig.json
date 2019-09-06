@@ -8,7 +8,7 @@
   "synchronize": true,
   "logging": true,
   "entities": [
-    "dist/idea/*.js"
+    "dist/entity/*.js"
   ],
   "migrations": [
     "src/migration/**/*.ts"
@@ -17,7 +17,7 @@
     "src/subscriber/**/*.ts"
   ],
   "cli": {
-    "entitiesDir": "src/idea",
+    "entitiesDir": "src/entity",
     "migrationsDir": "src/migration",
     "subscribersDir": "src/subscriber"
   }
