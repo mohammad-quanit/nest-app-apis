@@ -1,10 +1,19 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Body,
+  Param,
+  Query,
+} from '@nestjs/common';
 import { IdeaService } from '../../services/idea/idea.service';
 import { IdeaDTO } from 'src/DTO/idea.dto';
 
 @Controller('idea')
 export class IdeaController {
-  constructor(private ideaService: IdeaService) { }
+  constructor(private ideaService: IdeaService) {}
   @Get()
   showAllIdeas() {
     return this.ideaService.showAll();
