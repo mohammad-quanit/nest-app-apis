@@ -17,10 +17,10 @@ export class UserService {
     return users.map(user => user.toResponseObject(false));
   }
 
-  async login(data: UserDTO): Promise<ResponseDTO> {
+  async login(data: any): Promise<ResponseDTO> {
     const { email, password } = data;
     const user = await this.userRepository.findOne({ where: { email } });
-    if (!user || (await user.comparePassword(password))) {
+    if (!user || !(await user.comparePassword(password))) {
       throw new HttpException(
         'Invalid Username/Password',
         HttpStatus.BAD_REQUEST,
@@ -29,13 +29,14 @@ export class UserService {
     return user.toResponseObject();
   }
 
-  async register(data: UserDTO) {
+  async register(data: UserDTO): Promise<ResponseDTO> {
     const { email } = data;
     let user = await this.userRepository.findOne({ where: { email } });
     if (user) {
       throw new HttpException('User already exists!', HttpStatus.BAD_REQUEST);
     }
-    user = await this.userRepository.save(data);
+    user = await this.userRepository.create(data);
+    await this.userRepository.save(user);
     return user.toResponseObject();
   }
 }

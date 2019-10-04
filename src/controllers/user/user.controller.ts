@@ -15,8 +15,8 @@ export class UserController {
   }
 
   @Post('login')
-  @UsePipes(new ValidationPipe())
-  login(@Body() data: UserDTO) {
+  // @UsePipes(new ValidationPipe())
+  login(@Body() data: any) {
     this.logger.log(JSON.stringify(data));
     return this.userServcie.login(data);
   }
