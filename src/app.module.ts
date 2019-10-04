@@ -4,13 +4,15 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+
 import { IdeaModule } from './modules/idea/idea.module';
+import { UserModule } from './modules/user/user.module';
 
 import { HttpErrorFilter } from './Shared/http-error-filter';
 import { LoggingInterceptor } from './Shared/logging.interceptor';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(), IdeaModule],
+  imports: [TypeOrmModule.forRoot(), IdeaModule, UserModule],
   controllers: [AppController],
   providers: [
     AppService,
