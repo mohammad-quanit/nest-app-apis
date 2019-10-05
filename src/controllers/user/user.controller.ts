@@ -11,12 +11,14 @@ export class UserController {
 
   constructor(private userServcie: UserService) { }
 
+  /* Getting all users */
   @Get('users')
   @UseGuards(new AuthGuard())
-  showAllUsers(@User('username') user) {
+  showAllUsers(@User() user) {
     return this.userServcie.showAll();
   }
 
+  /* Login user */
   @Post('login')
   // @UsePipes(new ValidationPipe())
   login(@Body() data: any) {
@@ -24,6 +26,7 @@ export class UserController {
     return this.userServcie.login(data);
   }
 
+  /* Registering user */
   @Post('register')
   @UsePipes(new ValidationPipe())
   register(@Body() data: UserDTO) {

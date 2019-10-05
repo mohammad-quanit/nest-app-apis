@@ -4,14 +4,17 @@ import {
   CreateDateColumn,
   Column,
   BeforeInsert,
+  OneToMany,
 } from 'typeorm';
 
 import * as bcrypt from 'bcryptjs';
 import * as jwt from 'jsonwebtoken';
 import { ResponseDTO } from 'src/DTO/ResponseObj.dto';
+import { IdeaEntity } from './idea.entity';
 
 @Entity('user')
 export class UserEntity {
+  /* Database Fields */
   @PrimaryGeneratedColumn('uuid') id: string;
 
   @CreateDateColumn() createdAt: Date;
@@ -22,11 +25,21 @@ export class UserEntity {
 
   @Column('text') password: string;
 
+  /*
+    One to many relationship field
+    for connecting user to idea
+    i.e author field in idea table/entity
+  */
+  @OneToMany(type => IdeaEntity, idea => idea.author)
+  ideas: IdeaEntity[];
+
+  /* Hashing password before inserting into DB */
   @BeforeInsert()
   async hashPassword() {
     this.password = await bcrypt.hash(this.password, 10);
   }
 
+  /* Object Response for all http methods */
   toResponseObject(showToken: boolean = true): ResponseDTO {
     const { id, createdAt, username, email, token } = this;
     const responseObj: any = { id, createdAt, username, email };
@@ -36,10 +49,12 @@ export class UserEntity {
     return responseObj;
   }
 
+  /* Comparing password for login */
   async comparePassword(attemptPassword: string) {
     return await bcrypt.compare(attemptPassword, this.password);
   }
 
+  /* Getter for signing auth token */
   private get token() {
     const { id } = this;
     return jwt.sign({ id }, process.env.JWT_SECRET_KEY, {

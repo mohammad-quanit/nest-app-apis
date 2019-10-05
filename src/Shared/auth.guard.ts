@@ -4,6 +4,12 @@ import * as jwt from 'jsonwebtoken';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
+  /*
+    Responsible for authentication
+    if token validated true it
+    returns true and next middleware
+    will call after this
+  */
   async canActivate(
     context: ExecutionContext,
   ): Promise<boolean> {
@@ -15,6 +21,7 @@ export class AuthGuard implements CanActivate {
     return true;
   }
 
+  /* Validating tokken */
   async validateToken(auth: string) {
     if (auth.split(' ')[0] !== 'Bearer') {
       throw new HttpException('Invalid Token!', HttpStatus.FORBIDDEN);

@@ -10,13 +10,15 @@ export class UserService {
   constructor(
     @InjectRepository(UserEntity)
     private userRepository: Repository<UserEntity>,
-  ) {}
+  ) { }
 
+  /* Showing all Users */
   async showAll(): Promise<ResponseDTO[]> {
     const users = await this.userRepository.find();
     return users.map(user => user.toResponseObject(false));
   }
 
+  /* Login user */
   async login(data: any): Promise<ResponseDTO> {
     const { email, password } = data;
     const user = await this.userRepository.findOne({ where: { email } });
@@ -29,6 +31,7 @@ export class UserService {
     return user.toResponseObject();
   }
 
+  /* Register user */
   async register(data: UserDTO): Promise<ResponseDTO> {
     const { email } = data;
     let user = await this.userRepository.findOne({ where: { email } });
