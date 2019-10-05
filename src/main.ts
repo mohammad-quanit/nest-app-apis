@@ -8,6 +8,7 @@ const PORT = process.env.PORT || 8081;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.setGlobalPrefix('/v1/api');
   app.enableCors();
   await app.listen(PORT);
   Logger.log(`Server running on http://localhost:${PORT}`, 'Bootstrap');
