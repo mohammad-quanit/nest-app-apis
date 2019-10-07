@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, CacheModule } from '@nestjs/common';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
@@ -12,7 +12,7 @@ import { HttpErrorFilter } from './Shared/http-error-filter';
 import { LoggingInterceptor } from './Shared/logging.interceptor';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(), IdeaModule, UserModule],
+  imports: [CacheModule.register(), TypeOrmModule.forRoot(), IdeaModule, UserModule],
   controllers: [AppController],
   providers: [
     AppService,

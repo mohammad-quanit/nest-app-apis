@@ -24,7 +24,9 @@ export class IdeaEntity {
    /*
     Many to one relationship field
     for connecting user to idea
-    i.e author field in idea table/entity
+    i.e Many ideas from one author/user
+
+    leftToRight ---> current entity to target entity
   */
   @ManyToOne(type => UserEntity, author => author.ideas)
   author: UserEntity;

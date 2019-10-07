@@ -13,7 +13,7 @@ export class UserController {
 
   /* Getting all users */
   @Get('users')
-  @UseGuards(new AuthGuard())
+  // @UseGuards(new AuthGuard())
   showAllUsers(@User() user) {
     return this.userServcie.showAll();
   }
