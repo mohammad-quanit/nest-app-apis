@@ -21,6 +21,12 @@ export class IdeaService {
     return { ...idea, author: idea.author.toResponseObject(false) };
   }
 
+  private checkOwnershipForDeleteUpdate(idea: IdeaEntity, userId: string) {
+    if (idea.author.id !== userId) {
+      throw new HttpException('Incorrect User!', HttpStatus.UNAUTHORIZED);
+    }
+  }
+
   /* Showing all ideas */
   async showAll() {
     const ideas = await this.ideaRepository.find({ relations: ['author'] });
@@ -45,23 +51,25 @@ export class IdeaService {
   }
 
   /* Updating an idea */
-  async update(id: string, data: Partial<IdeaDTO>): Promise<IdeaResponseObject> {
-    let idea = await this.ideaRepository.findOne({ where: { id } });
+  async update(id: string, userId: string, data: Partial<IdeaDTO>): Promise<IdeaResponseObject> {
+    let idea = await this.ideaRepository.findOne({ where: { id }, relations: ['author'] });
     if (!idea) {
       throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
     }
+    this.checkOwnershipForDeleteUpdate(idea, userId);
     await this.ideaRepository.update({ id }, data);
-    idea = await this.ideaRepository.findOne({ where: { id } });
+    idea = await this.ideaRepository.findOne({ where: { id }, relations: ['author'] });
     return this.toResponseObject(idea);
   }
 
   /* Deleting an idea */
-  async destroy(id: string) {
-    const idea = await this.ideaRepository.findOne({ where: { id } });
+  async destroy(id: string, userId: string): Promise<IdeaResponseObject> {
+    const idea = await this.ideaRepository.findOne({ where: { id }, relations: ['author'] });
     if (!idea) {
       throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
     }
+    this.checkOwnershipForDeleteUpdate(idea, userId);
     await this.ideaRepository.delete({ id });
-    return idea;
+    return this.toResponseObject(idea);
   }
 }

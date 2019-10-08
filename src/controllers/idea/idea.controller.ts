@@ -40,10 +40,6 @@ export class IdeaController {
   /* Getting all ideas */
   @Get()
   showAllIdeas() {
-    // tslint:disable-next-line: no-console
-    console.time('Time this');
-    // tslint:disable-next-line: no-console
-    console.timeEnd('Time this');
     return this.ideaService.showAll();
   }
 
@@ -64,15 +60,18 @@ export class IdeaController {
 
   /* Updating single idea */
   @Put(':id')
+  @UseGuards(new AuthGuard())
   @UsePipes(new ValidationPipe())
-  updateIdea(@Param('id') id: string, @Body() data: IdeaDTO) {
-    this.logger.log(JSON.stringify(data));
-    return this.ideaService.update(id, data);
+  updateIdea(@Param('id') id: string, @User('id') user: string, @Body() data: Partial<IdeaDTO>) {
+    this.logData({ id, user, data });
+    return this.ideaService.update(id, user, data);
   }
 
   /* Deleting single idea */
   @Delete()
-  destroyIdea(@Query('id') id: string) {
-    return this.ideaService.destroy(id);
+  @UseGuards(new AuthGuard())
+  destroyIdea(@Query('id') id: string, @User('id') user: string) {
+    this.logData({ id, user });
+    return this.ideaService.destroy(id, user);
   }
 }
