@@ -5,6 +5,8 @@ import {
   Column,
   BeforeInsert,
   OneToMany,
+  ManyToMany,
+  JoinTable,
 } from 'typeorm';
 
 import * as bcrypt from 'bcryptjs';
@@ -35,6 +37,10 @@ export class UserEntity {
   @OneToMany(type => IdeaEntity, idea => idea.author)
   ideas: IdeaEntity[];
 
+  @ManyToMany(type => IdeaEntity, { cascade: true })
+  @JoinTable()
+  bookmarks: IdeaEntity[];
+
   /* Hashing password before inserting into DB */
   @BeforeInsert()
   async hashPassword() {
@@ -45,12 +51,9 @@ export class UserEntity {
   toResponseObject(showToken: boolean = true): ResponseDTO {
     const { id, createdAt, username, email, token } = this;
     const responseObj: any = { id, createdAt, username, email };
-    if (showToken) {
-      responseObj.token = token;
-    }
-    if (this.ideas) {
-      responseObj.ideas = this.ideas;
-    }
+    if (showToken) { responseObj.token = token; }
+    if (this.ideas) { responseObj.ideas = this.ideas; }
+    if (this.bookmarks) { responseObj.bookmarks = this.bookmarks; }
     return responseObj;
   }
 

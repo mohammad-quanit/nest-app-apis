@@ -22,11 +22,10 @@ import { User } from '../../Shared/user.decorator';
 @Controller('ideas')
 @UseInterceptors(CacheInterceptor)
 export class IdeaController {
-
   /* A Global logger */
   private logger = new Logger('Idea Controller');
 
-  constructor(private ideaService: IdeaService) { }
+  constructor(private ideaService: IdeaService) {}
 
   private logData(options: any) {
     // tslint:disable-next-line: no-unused-expression
@@ -62,7 +61,11 @@ export class IdeaController {
   @Put(':id')
   @UseGuards(new AuthGuard())
   @UsePipes(new ValidationPipe())
-  updateIdea(@Param('id') id: string, @User('id') user: string, @Body() data: Partial<IdeaDTO>) {
+  updateIdea(
+    @Param('id') id: string,
+    @User('id') user: string,
+    @Body() data: Partial<IdeaDTO>,
+  ) {
     this.logData({ id, user, data });
     return this.ideaService.update(id, user, data);
   }
@@ -73,5 +76,17 @@ export class IdeaController {
   destroyIdea(@Query('id') id: string, @User('id') user: string) {
     this.logData({ id, user });
     return this.ideaService.destroy(id, user);
+  }
+
+  @Post(':id/bookmark')
+  @UseGuards(new AuthGuard())
+  bookmarkIdea(@Param('id') id: string, @User('id') user: string) {
+    this.logData({ id, user });
+  }
+
+  @Delete(':id/bookmark')
+  @UseGuards(new AuthGuard())
+  unbookmarkIdea(@Param('id') id: string, @User('id') user: string) {
+    this.logData({ id, user });
   }
 }

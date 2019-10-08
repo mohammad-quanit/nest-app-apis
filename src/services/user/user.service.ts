@@ -10,11 +10,13 @@ export class UserService {
   constructor(
     @InjectRepository(UserEntity)
     private userRepository: Repository<UserEntity>,
-  ) { }
+  ) {}
 
   /* Showing all Users */
   async showAll(): Promise<ResponseDTO[]> {
-    const users = await this.userRepository.find({ relations: ['ideas'] });
+    const users = await this.userRepository.find({
+      relations: ['ideas', 'bookmarks'],
+    });
     return users.map(user => user.toResponseObject(false));
   }
 

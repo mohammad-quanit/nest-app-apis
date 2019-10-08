@@ -1,4 +1,5 @@
 import { ResponseDTO } from './ResponseObj.dto';
+import { IdeaEntity } from '../entity/idea.entity';
 
 export class IdeaResponseObject {
   id?: string;
@@ -7,4 +8,6 @@ export class IdeaResponseObject {
   idea: string;
   description: string;
   author: ResponseDTO;
+  upvotes?: number;
+  downvotes?: number;
 }
