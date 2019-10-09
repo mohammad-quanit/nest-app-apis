@@ -6,6 +6,7 @@ import { IdeaDTO } from '../../DTO/idea.dto';
 import { IdeaEntity } from '../../entity/idea.entity';
 import { UserEntity } from '../../entity/user.entity';
 import { IdeaResponseObject } from '../../DTO/IdeaResponse.dto';
+import { Votes } from '../../Shared/votes.enum';
 
 @Injectable()
 export class IdeaService {
@@ -29,6 +30,20 @@ export class IdeaService {
       resObj.downvotes = idea.downvotes.length;
     }
     return resObj;
+  }
+
+  /* Upvote Downvote Logic */
+  private async vote(idea: IdeaEntity, user: UserEntity, vote: Votes) {
+    const opposite = vote === Votes.UP ? Votes.DOWN : Votes.UP;
+    if (
+      idea[opposite].filter(voter => voter.id === user.id).length > 0 ||
+      idea[vote].filter(voter => voter.id === user.id).length > 0
+    ) {
+      idea[opposite] = idea[opposite].filter(voter => voter.id !== user.id);
+      idea[vote] = idea[vote].filter(voter => voter.id !== user.id);
+      await this.ideaRepository.save(idea);
+    }
+    return idea;
   }
 
   /* if users are authenticated, for deletion and updation */
@@ -102,6 +117,7 @@ export class IdeaService {
     return this.toResponseObject(idea);
   }
 
+  /* Bookmark service */
   async bookmark(id: string, userId: string) {
     const idea = await this.ideaRepository.findOne({ where: { id } });
     const user = await this.userRepository.findOne({
@@ -122,6 +138,7 @@ export class IdeaService {
     return user.toResponseObject();
   }
 
+  /* UnBookmark service */
   async unBookmark(id: string, userId: string) {
     const idea = await this.ideaRepository.findOne({ where: { id } });
     const user = await this.userRepository.findOne({

@@ -78,15 +78,33 @@ export class IdeaController {
     return this.ideaService.destroy(id, user);
   }
 
+  /* bookmark idea */
   @Post(':id/bookmark')
   @UseGuards(new AuthGuard())
   bookmarkIdea(@Param('id') id: string, @User('id') user: string) {
     this.logData({ id, user });
+    return this.ideaService.bookmark(id, user);
   }
 
+  /* unbookmark idea */
   @Delete(':id/bookmark')
   @UseGuards(new AuthGuard())
   unbookmarkIdea(@Param('id') id: string, @User('id') user: string) {
+    this.logData({ id, user });
+    return this.ideaService.unBookmark(id, user);
+  }
+
+  /* upvote idea */
+  @Post(':id/upvote')
+  @UseGuards(new AuthGuard())
+  upvoteIdea(@Param('id') id: string, @User('id') user: string) {
+    this.logData({ id, user });
+  }
+
+  /* downvote idea */
+  @Post(':id/downvote')
+  @UseGuards(new AuthGuard())
+  downvoteIdea(@Param('id') id: string, @User('id') user: string) {
     this.logData({ id, user });
   }
 }
